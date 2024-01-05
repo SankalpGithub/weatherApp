@@ -1,14 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:weather/Modals/sticky_appbar.dart';
 import '../Modals/Colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class Home extends StatelessWidget{
+class Home extends StatefulWidget{
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  ScrollController _scrollController = ScrollController();
+bool isScrolled = false;
+bool isContent = false;
+String istaptext = "today";
+
+  @override
+  void initState() {
+    _scrollController.addListener(() {
+      setState(() {
+        isScrolled = _scrollController.offset > 10? true: false;
+        isContent = _scrollController.offset > 220? true: false;
+      });
+    });
+  }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   List<Color> gradientColors = [
   Color(0xFF2B00A5).withOpacity(0.5),
     windows,
     my_white
   ];
+
+  List hourly_forecast_list = [
+    {"time": "Now", "image": "assets/images/Group1.png", "degree": "10°"},
+    {"time": "10AM", "image": "assets/images/Group2.png", "degree": "8°"},
+    {"time": "11AM", "image": "assets/images/Group2.png", "degree": "5°"},
+    {"time": "12PM", "image": "assets/images/Group1.png", "degree": "12°"},
+    {"time": "1PM", "image": "assets/images/Group1.png", "degree": "9°"},
+    {"time": "2PM", "image": "assets/images/Group2.png", "degree": "12°"},
+  ];
+
+
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
@@ -48,6 +85,7 @@ class Home extends StatelessWidget{
       child: text,
     );
   }
+
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.w500,
@@ -73,39 +111,61 @@ class Home extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: my_bg,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // upper main body
-            buildStack(context),
-//change
-
-            //options
-            option(),
-
-
-
-            //window
-            window(),
-
-            //hourly forecast
-            hourly_forecast(),
-
-            //Day forecast
-            day_forecast(),
-
-            //Chance of rain
-            chance_of_rain(),
-
-            //sunrise and set
-            sunrise_and_set()
-          ],
-        ),
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+        SliverAppBar(
+          backgroundColor: isContent?sticknav: my_bg,
+        expandedHeight: 365.0,
+        floating: false,
+        pinned: true,
+        snap: false,
+        toolbarHeight: isScrolled?130:365,
+        collapsedHeight: isScrolled?130:365,
+        title: isContent?sticky_appbar():Container(),
+        flexibleSpace: FlexibleSpaceBar(
+          background: buildStack(context),
+          collapseMode: CollapseMode.parallax,
+        )
       ),
+          SliverAppBar(
+            toolbarHeight: 30,
+            snap: false,
+            backgroundColor: isContent?sticknav: my_bg,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: option(),
+              collapseMode: CollapseMode.parallax,
+            ),
+          ),
+          // SliverToBoxAdapter(
+          //   child: option()
+          // ),
+          SliverToBoxAdapter(
+            child: window(),
+          ),
+          SliverToBoxAdapter(
+            child: hourly_forecast(),
+          ),
+
+          SliverToBoxAdapter(
+            child: day_forecast(),
+          ),
+          SliverToBoxAdapter(
+            child: chance_of_rain(),
+          ),
+          SliverToBoxAdapter(
+            child: sunrise_and_set(),
+          )
+        ],
+      )
     );
+
   }
+
 
   Container sunrise_and_set() {
     return Container(
@@ -210,7 +270,7 @@ class Home extends StatelessWidget{
 
   Container chance_of_rain() {
     return Container(
-            margin: EdgeInsets.only(top: 16),
+            margin: EdgeInsets.only(top: 16, left: 10, right: 10),
             width: 380,
             height: 213,
             decoration: BoxDecoration(
@@ -246,7 +306,7 @@ class Home extends StatelessWidget{
                           fontSize: 15,
                           fontWeight: FontWeight.w500
                       )),
-                  
+
                   Container(
                     height: 24,
                     width: 229,
@@ -364,7 +424,7 @@ class Home extends StatelessWidget{
 
   Container day_forecast() {
     return Container(
-            margin: EdgeInsets.only(top: 16),
+            margin: EdgeInsets.only(top: 16, left: 10, right: 10),
             width: 380,
             height: 219,
             decoration: BoxDecoration(
@@ -440,7 +500,6 @@ class Home extends StatelessWidget{
                               interval: 1,
                             ),
                           ),
-
                         ),
                       lineBarsData: [
                         LineChartBarData(
@@ -472,7 +531,11 @@ class Home extends StatelessWidget{
                           ),
                         )
                       ],
-                      showingTooltipIndicators: [],
+                      showingTooltipIndicators: [
+                        ShowingTooltipIndicators([
+
+                        ]),
+                      ]
                     )
                   )
                 ),
@@ -483,7 +546,7 @@ class Home extends StatelessWidget{
 
   Container hourly_forecast() {
     return Container(
-            margin: EdgeInsets.only(top: 16),
+            margin: EdgeInsets.only(top: 16, left: 10, right: 10),
             width: 380,
             height: 150,
             decoration: BoxDecoration(
@@ -510,8 +573,34 @@ class Home extends StatelessWidget{
                     ))
                   ],
                 ),
+                Container(
+                  width: 350,
+                  height: 90,
+                  child: ListView.builder(
+                      itemCount: hourly_forecast_list.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index){
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(hourly_forecast_list[index]["time"],
+                              style: TextStyle(
+                                  fontSize: 13.16,
+                                  fontWeight: FontWeight.w500
+                          )),
+                          Image.asset(hourly_forecast_list[index]["image"], height: 32, width: 24,),
+                          Text(hourly_forecast_list[index]["degree"], style: TextStyle(
+                              fontSize: 18.18,
+                              fontWeight: FontWeight.w500
 
-
+                          ))
+                        ],
+                      ),
+                    );
+                  }),
+                ),
               ],
             )
           );
@@ -713,64 +802,6 @@ class Home extends StatelessWidget{
           );
   }
 
-  Container option() {
-    return Container(
-            margin: EdgeInsets.only(top: 18),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                GestureDetector(
-                  onTap: (){},
-                  child: Container(
-                    height: 42,
-                    width: 116,
-                    decoration: BoxDecoration(
-                      color: options,
-                      borderRadius: BorderRadius.circular(14)
-                    ),
-                    child: Center(child: Text("Today", style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500
-                    ))),
-                  ),
-                ),
-
-                GestureDetector(
-                  onTap: (){},
-                  child: Container(
-                    height: 42,
-                    width: 116,
-                    decoration: BoxDecoration(
-                      color: my_white,
-                      borderRadius: BorderRadius.circular(14)
-                    ),
-                    child: Center(child: Text("Tomorrow",style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500
-                    ))),
-                  ),
-                ),
-
-                GestureDetector(
-                  onTap: (){},
-                  child: Container(
-                    height: 42,
-                    width: 116,
-                    decoration: BoxDecoration(
-                      color: my_white,
-                      borderRadius: BorderRadius.circular(14)
-                    ),
-                    child: Center(child: Text("10 days", style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500
-                    ))),
-                  ),
-                ),
-              ],
-            ),
-          );
-  }
-
   Stack buildStack(BuildContext context) {
     return Stack(
             children: [
@@ -778,8 +809,8 @@ class Home extends StatelessWidget{
                 width: MediaQuery.of(context).size.width,
                 height: 412,
                 decoration: BoxDecoration(
-                  image: DecorationImage(image: AssetImage("assets/images/main_bg.png"),
-                  fit:  BoxFit.fill),
+                    image: DecorationImage(image: AssetImage("assets/images/main_bg.png"),
+                        fit:  BoxFit.fill),
                     color: Colors.grey,
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(33), bottomRight: Radius.circular(33))
                 ),
@@ -787,74 +818,82 @@ class Home extends StatelessWidget{
               Padding(
                 padding: const EdgeInsets.only(left: 20,right: 20, top: 50),
                 child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Kharkiv, Ukraine", style: TextStyle(color: my_white, fontSize: 22),),
-                        Icon(Icons.search, color: my_white,)
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                            Container(
-                              margin: EdgeInsets.only(top: 85),
-                                  child:
-                                  Stack(
-                                  children: [
-                                  Text("3°", style: TextStyle(
-                                    fontSize: 112,
-                                    fontWeight: FontWeight.w400,
-                                    color: my_white,
-                                  ),
-                                  ),
-                            Container(
-                              margin: EdgeInsets.only(top: 85, left: 75),
-                                child: Text("Feels like -2°", style: TextStyle(fontSize: 18, color: my_white),))
-                                  ]
-                        )
-                            ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 50,),
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(bottom: 20),
-                                child: Image.asset("assets/images/cloud and sun 1.png", scale: 1.5,),
-                              ),
-                              Text("Cloudy", style: TextStyle(fontSize: 22, color: my_white),)
-                            ],
-                          )
-                        )
-                      ]
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 20),
-                      child: Row(
+                    children: [
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("January 18, 16:14", style: TextStyle(
-                            color: my_white, fontSize: 18
-                          ),),
-                          Column(
-                            children: [
-                              Text("Day 3°" ,style: TextStyle(
-                              color: my_white, fontSize: 18
-                          ),),
-                              Text("Night -1°", style: TextStyle(
-                                  color: my_white, fontSize: 18
-                              ),)
-                            ],
-                          )
+                          Text("Kharkiv, Ukraine", style: TextStyle(color: my_white, fontSize: 22),),
+                          Icon(Icons.search, color: my_white,)
                         ],
                       ),
-                    )
-                  ],
-                ),
-              )
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                              Container(
+                                margin: EdgeInsets.only(top: 85),
+                                    child:
+                                    Stack(
+                                    children: [
+                                    Text("3°", style: TextStyle(
+                                      fontSize: 112,
+                                      fontWeight: FontWeight.w400,
+                                      color: my_white,
+                                    ),
+                                    ),
+                              Container(
+                                margin: EdgeInsets.only(top: 85, left: 75),
+                                  child: Text("Feels like -2°", style: TextStyle(fontSize: 18, color: my_white),))
+                                    ]
+                          )
+                              ),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 50,),
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 20),
+                                  child: Image.asset("assets/images/cloud and sun 1.png", scale: 1.5,),
+                                ),
+                                Text("Cloudy", style: TextStyle(fontSize: 22, color: my_white),)
+                              ],
+                            )
+                          )
+                        ]
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("January 18, 16:14", style: TextStyle(
+                              color: my_white, fontSize: 18
+                            ),),
+                            Column(
+                              children: [
+                                Text("Day 3°" ,style: TextStyle(
+                                color: my_white, fontSize: 18
+                            ),),
+                                Text("Night -1°", style: TextStyle(
+                                    color: my_white, fontSize: 18
+                                ),)
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+              ),
             ],
           );
   }
 }
+
+// class _10_days extends StatelessWidget{
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold();
+//   }
+//
+// }
