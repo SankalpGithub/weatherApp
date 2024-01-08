@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather/Modals/request.dart';
 import 'package:weather/Modals/sticky_appbar.dart';
 import '../Modals/Colors.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -17,6 +18,8 @@ String istaptext = "today";
 
   @override
   void initState() {
+    Request re = new Request();
+    re.fetchData();
     _scrollController.addListener(() {
       setState(() {
         isScrolled = _scrollController.offset > 10? true: false;
@@ -113,68 +116,66 @@ String istaptext = "today";
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: my_bg,
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-        SliverAppBar(
-          backgroundColor: isContent?sticknav: my_bg,
-        expandedHeight: 365.0,
-        floating: false,
-        pinned: true,
-        snap: false,
-        toolbarHeight: isScrolled?130:365,
-        collapsedHeight: isScrolled?130:365,
-        title: isContent?sticky_appbar():Container(),
-        flexibleSpace: FlexibleSpaceBar(
-          background: buildStack(context),
-          collapseMode: CollapseMode.parallax,
-        )
-      ),
+        backgroundColor: my_bg,
+        body: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
           SliverAppBar(
-            toolbarHeight: 30,
-            snap: false,
             backgroundColor: isContent?sticknav: my_bg,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: option(),
-              collapseMode: CollapseMode.parallax,
-            ),
-          ),
-          // SliverToBoxAdapter(
-          //   child: option()
-          // ),
-          SliverToBoxAdapter(
-            child: window(),
-          ),
-          SliverToBoxAdapter(
-            child: hourly_forecast(),
-          ),
-
-          SliverToBoxAdapter(
-            child: day_forecast(),
-          ),
-          SliverToBoxAdapter(
-            child: chance_of_rain(),
-          ),
-          SliverToBoxAdapter(
-            child: sunrise_and_set(),
+          expandedHeight: 365.0,
+          floating: false,
+          pinned: true,
+          snap: false,
+          toolbarHeight: isScrolled?130:365,
+          collapsedHeight: isScrolled?130:365,
+          title: isContent?sticky_appbar():Container(),
+          flexibleSpace: FlexibleSpaceBar(
+            background: buildStack(context),
+            collapseMode: CollapseMode.parallax,
           )
-        ],
-      )
-    );
+        ),
+            SliverAppBar(
+              toolbarHeight: 30,
+              snap: false,
+              backgroundColor: isContent?sticknav: my_bg,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                background: option(),
+                collapseMode: CollapseMode.parallax,
+              ),
+            ),
+
+            SliverToBoxAdapter(
+              child: window(),
+            ),
+            SliverToBoxAdapter(
+              child: hourly_forecast(),
+            ),
+
+            SliverToBoxAdapter(
+              child: day_forecast(),
+            ),
+            SliverToBoxAdapter(
+              child: chance_of_rain(),
+            ),
+            SliverToBoxAdapter(
+              child: sunriseAndSet(),
+            )
+          ],
+        )
+      );
 
   }
 
 
-  Container sunrise_and_set() {
+  Container sunriseAndSet() {
     return Container(
-            margin: EdgeInsets.only(top: 24, bottom: 10),
+            margin: const EdgeInsets.only(top: 24, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 6),
+                  margin: const EdgeInsets.only(top: 6),
                   height: 65,
                   width: 182,
                   decoration: BoxDecoration(
@@ -192,7 +193,7 @@ String istaptext = "today";
                             borderRadius: BorderRadius.circular(20)
                         ),child: Image.asset("assets/images/nights_stay.png" ,height: 16, width: 16,),
                       ),
-                      Column(
+                      const Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -208,8 +209,8 @@ String istaptext = "today";
                         ],
                       ),
                       Container(
-                          margin: EdgeInsets.only(top: 40),
-                          child: Text("4h ago", style: TextStyle(
+                          margin: const EdgeInsets.only(top: 40),
+                          child: const Text("4h ago", style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w500
                           )
