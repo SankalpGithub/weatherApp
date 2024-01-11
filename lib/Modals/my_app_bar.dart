@@ -11,6 +11,8 @@ class MyAppBar extends StatefulWidget{
   final String time;
   final String dayDegree;
   final String nightDegree;
+  final bool isContent;
+  final bool isScrolled;
 
 
   const MyAppBar(
@@ -24,7 +26,9 @@ class MyAppBar extends StatefulWidget{
     required this.date,
     required this.time,
     required this.dayDegree,
-    required this.nightDegree
+    required this.nightDegree,
+        required this.isContent,
+        required this.isScrolled
   });
 
   @override
@@ -34,7 +38,20 @@ class MyAppBar extends StatefulWidget{
 class MyAppBarState extends State<MyAppBar> {
   @override
   Widget build(BuildContext context) {
-    return buildStack(context);
+    return  SliverAppBar(
+        backgroundColor: widget.isContent?sticknav: my_bg,
+        expandedHeight: 365.0,
+        floating: false,
+        pinned: true,
+        snap: false,
+        toolbarHeight: widget.isScrolled?130:365,
+        collapsedHeight: widget.isScrolled?130:365,
+        title: widget.isContent?stickyAppBar(context):Container(),
+        flexibleSpace: FlexibleSpaceBar(
+          background: buildStack(context),
+          collapseMode: CollapseMode.parallax,
+        )
+    );
   }
 
   Stack buildStack(BuildContext context) {
@@ -165,5 +182,70 @@ class MyAppBarState extends State<MyAppBar> {
       ),
     ],
   );
+  }
+
+  Column stickyAppBar(BuildContext context){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+      //info
+      children: [
+
+        //row for address and search
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+
+            //address
+            Text(widget.address,
+              style: const TextStyle(color: my_black, fontSize: 22),
+            ),
+
+            //search Icon
+            const Icon(Icons.search, color: my_black,)
+          ],
+        ),
+
+        //row for tempDegree and weatherStatus
+        Container(
+          margin: const EdgeInsets.only(top: 10),
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+
+                //stack for tempDegree and feelsLike
+                Stack(
+                    children: [
+
+                      //tempDegree
+                      Text(widget.tempInDegree, style: const TextStyle(
+                        fontSize: 52,
+                        fontWeight: FontWeight.w400,
+                        color: my_black,
+                      ),
+                      ),
+
+                      //feelsLike
+                      Container(
+                          margin: const EdgeInsets.only(top: 35, left: 40),
+                          child: Text(widget.feelsLike,
+                            style: const TextStyle(fontSize: 16, color: my_black),))
+                    ]
+                ),
+
+                //weather img path
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: Image.asset(
+                    widget.weatherImgPath, width: 59,height: 59,
+                  )
+                ),
+              ]
+          ),
+        ),
+
+      ],
+    );
   }
 }
