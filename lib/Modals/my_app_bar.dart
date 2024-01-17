@@ -75,8 +75,8 @@ class MyAppBarState extends State<MyAppBar> {
       Padding(
         padding: const EdgeInsets.only(left: 20,right: 20, top: 50),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-
             //row for address and search
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,85 +97,72 @@ class MyAppBarState extends State<MyAppBar> {
                 children: [
 
                   //stack of tempDegree and feelsLike
-                  Container(
-                      margin: const EdgeInsets.only(top: 85),
-                      child:
-                      Stack(
-                          children: [
+                  Stack(
+                      children: [
 
-                            //tempDegree
-                            Text(
-                              widget.tempInDegree, style: const TextStyle(
-                              fontSize: 112,
-                              fontWeight: FontWeight.w400,
-                              color: my_white,
-                            ),
-                            ),
+                        //tempDegree
+                        Text(
+                          widget.tempInDegree, style: const TextStyle(
+                          fontSize: 112,
+                          fontWeight: FontWeight.w400,
+                          color: my_white,
+                        ),
+                        ),
 
-                            //feelsLike
-                            Container(
-                                margin: const EdgeInsets.only(top: 85, left: 75),
-                                child: Text(widget.feelsLike, style: const TextStyle(fontSize: 18, color: my_white),
-                                )
+                        //feelsLike
+                        Container(
+                            margin: const EdgeInsets.only(top: 85, left: 75),
+                            child: Text(widget.feelsLike, style: const TextStyle(fontSize: 18, color: my_white),
                             )
-                          ]
-                      )
+                        )
+                      ]
                   ),
 
                   // column for weatherImgPath and weatherDescription
-                  Container(
-                      margin: const EdgeInsets.only(bottom: 50,),
-                      child: Column(
-                        children: [
+                  Column(
+                    children: [
 
-                          //weather Image
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 20),
-                            child: Image.asset(widget.weatherImgPath, scale: 1.5,),
-                          ),
+                      //weather Image
+                      Image.network(widget.weatherImgPath, scale: 1.5,),
 
-                          //weather description
-                          Text(widget.weatherDis, style:const TextStyle(fontSize: 22, color: my_white),)
-                        ],
-                      )
+                      //weather description
+                      Text(widget.weatherDis, style:const TextStyle(fontSize: 22, color: my_white),)
+                    ],
                   )
                 ]
             ),
 
             //row for date/time and degree of day and night
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
 
-                  //date and time
-                  Text("${widget.date}, ${widget.time}",
-                    style: const TextStyle(
-                      color: my_white, fontSize: 18
-                  ),
-                  ),
+                //date and time
+                Text("${widget.date}, ${widget.time}",
+                  style: const TextStyle(
+                    color: my_white, fontSize: 18
+                ),
+                ),
 
-                  //column for dayDegree and nightDegree
-                  Column(
-                    children: [
+                //column for dayDegree and nightDegree
+                Column(
+                  children: [
 
-                      //dayDegree
-                      Text(widget.dayDegree,
-                        style: const TextStyle(
-                          color: my_white, fontSize: 18
-                      ),
-                      ),
+                    //dayDegree
+                    Text(widget.dayDegree,
+                      style: const TextStyle(
+                        color: my_white, fontSize: 18
+                    ),
+                    ),
 
-                      //nightDegree
-                      Text(widget.nightDegree,
-                        style: const TextStyle(
-                          color: my_white, fontSize: 18
-                      ),)
-                    ],
-                  )
-                ],
-              ),
+                    //nightDegree
+                    Text(widget.nightDegree,
+                      style: const TextStyle(
+                        color: my_white, fontSize: 18
+                    ),)
+                  ],
+                )
+              ],
             )
           ],
         ),
