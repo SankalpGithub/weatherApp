@@ -15,6 +15,7 @@ class _todayState extends State<today> {
     my_white
   ];
 
+
   List hourly_forecast_list = [
     {"time": "Now", "image": "assets/images/Group1.png", "degree": "10°"},
     {"time": "10AM", "image": "assets/images/Group2.png", "degree": "8°"},
