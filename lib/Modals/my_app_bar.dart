@@ -97,23 +97,20 @@ class MyAppBarState extends State<MyAppBar> {
                 children: [
 
                   //stack of tempDegree and feelsLike
-                  Stack(
+                  Column(
                       children: [
 
                         //tempDegree
                         Text(
                           widget.tempInDegree, style: const TextStyle(
-                          fontSize: 112,
+                          fontSize: 90,
                           fontWeight: FontWeight.w400,
                           color: my_white,
                         ),
                         ),
 
                         //feelsLike
-                        Container(
-                            margin: const EdgeInsets.only(top: 85, left: 75),
-                            child: Text(widget.feelsLike, style: const TextStyle(fontSize: 18, color: my_white),
-                            )
+                        Text(widget.feelsLike, style: const TextStyle(fontSize: 18, color: my_white),
                         )
                       ]
                   ),
@@ -121,12 +118,15 @@ class MyAppBarState extends State<MyAppBar> {
                   // column for weatherImgPath and weatherDescription
                   Column(
                     children: [
-
                       //weather Image
-                      Image.network(widget.weatherImgPath, scale: 1.5,),
+                      Image.asset("assets/images/cloud and sun 1.png", width: 70,height: 70,),
 
+                      const SizedBox(
+                        height: 30,
+                      ),
                       //weather description
-                      Text(widget.weatherDis, style:const TextStyle(fontSize: 22, color: my_white),)
+                      Text(
+                        widget.weatherDis, style:const TextStyle(fontSize: 22, color: my_white),)
                     ],
                   )
                 ]
@@ -202,7 +202,7 @@ class MyAppBarState extends State<MyAppBar> {
               children: [
 
                 //stack for tempDegree and feelsLike
-                Stack(
+                Column(
                     children: [
 
                       //tempDegree
@@ -215,7 +215,6 @@ class MyAppBarState extends State<MyAppBar> {
 
                       //feelsLike
                       Container(
-                          margin: const EdgeInsets.only(top: 35, left: 40),
                           child: Text(widget.feelsLike,
                             style: const TextStyle(fontSize: 16, color: my_black),))
                     ]
@@ -224,8 +223,10 @@ class MyAppBarState extends State<MyAppBar> {
                 //weather img path
                 Container(
                   margin: const EdgeInsets.only(bottom: 10),
+                  height: 50,
+                  width: 50,
                   child: Image.asset(
-                    widget.weatherImgPath, width: 59,height: 59,
+                    "assets/images/cloud and sun 1.png", width: 59,height: 59,
                   )
                 ),
               ]

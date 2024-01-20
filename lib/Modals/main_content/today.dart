@@ -3,6 +3,20 @@ import 'package:flutter/material.dart';
 import '../Colors.dart';
 
 class today extends StatefulWidget{
+
+  final String windSpeed;
+  final String rainChance;
+  final String pressure;
+  final String uvIndex;
+
+  const today({
+    super.key,
+    required this.windSpeed,
+    required this.rainChance,
+    required this.pressure,
+    required this.uvIndex,
+  });
+
   @override
   State<today> createState() => _todayState();
 }
@@ -580,20 +594,12 @@ class _todayState extends State<today> {
                               fontWeight: FontWeight.w500
                           )),
 
-                          Text("12km/h", style: TextStyle(
+                          Text(widget.windSpeed, style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500
                           ))
                         ],
                       ),
-                      Container(
-                          margin: EdgeInsets.only(top: 40),
-                          child: Text("2 km/h", style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500
-                          )
-                          )
-                      )
                     ],
                   ),
                 ),
@@ -625,18 +631,12 @@ class _todayState extends State<today> {
                               fontWeight: FontWeight.w500
                           )),
 
-                          Text("24%", style: TextStyle(
+                          Text(widget.rainChance, style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500
                           ))
                         ],
                       ),
-                      Container(
-                          margin: EdgeInsets.only(top: 40),
-                          child: Text("10%", style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500
-                          )))
                     ],
                   ),
                 ),
@@ -673,20 +673,12 @@ class _todayState extends State<today> {
                               fontWeight: FontWeight.w500
                           )),
 
-                          Text("720 hpa", style: TextStyle(
+                          Text(widget.pressure, style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500
                           ))
                         ],
                       ),
-                      Container(
-                          margin: EdgeInsets.only(top: 40),
-                          child: Text("32 hpa", style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500
-                          )
-                          )
-                      )
                     ],
                   ),
                 ),
@@ -718,18 +710,12 @@ class _todayState extends State<today> {
                               fontWeight: FontWeight.w500
                           )),
 
-                          Text("2,3", style: TextStyle(
+                          Text(widget.uvIndex, style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500
                           ))
                         ],
                       ),
-                      Container(
-                          margin: EdgeInsets.only(top: 40),
-                          child: Text("0.3h", style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500
-                          )))
                     ],
                   ),
                 ),

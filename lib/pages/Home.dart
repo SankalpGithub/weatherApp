@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
   void getData() async{
     Request re = Request();
     data = await re.fetchData();
-    dateTime(data['location']['localtime']);
+    dateTime(data['location']['localtime']!);
   }
   
   void dateTime(String dateTime){
@@ -67,7 +67,7 @@ class _HomeState extends State<Home> {
       case '11': month="November";break;
       case '12': month="December";break;
     }
-     date = '$month, ${dateList[2]}';
+     date = '$month ${dateList[2]}';
   }
 
 
@@ -89,11 +89,11 @@ class _HomeState extends State<Home> {
 
             //Main App Bar
             MyAppBar(
-                address: data['location']['name'] + "," + data['location']['country'],
-                tempInDegree: data['current']['temp_c'].toString(),
-                feelsLike: "feelsLike ${data['current']['feelslike_c'].toString()}°",
-                weatherDis: data['current']['condition']['text'],
-                weatherImgPath: data['current']['condition']['icon'],
+                address: data['location']['name']! + "," + data['location']['country']!,
+                tempInDegree: "${data['current']['temp_c']!.toInt().toString()}°",
+                feelsLike: "feelsLike ${data['current']['feelslike_c']!.toString()}°",
+                weatherDis: data['current']['condition']['text']!,
+                weatherImgPath: data['current']['condition']['icon']!,
                 date: date,
                 time: time,
                 dayDegree: "Day 3°",
@@ -124,9 +124,24 @@ class _HomeState extends State<Home> {
                   },
                   controller: myPageController,
                   children: [
-                    today(),
-                    today(),
-                    today(),
+                    today(
+                      windSpeed: data['current']['wind_kph']!,
+                      rainChance: data['forecast']['forecastday']['0']['day']['daily_chance_of_rain']!,
+                      pressure: data['current']['pressure_in']!,
+                      uvIndex: data['current']['uv']!,
+                    ),
+                    today(
+                      windSpeed: data['current']['wind_kph']!,
+                      rainChance: data['forecast']['forecastday']['0']['day']['daily_chance_of_rain']!,
+                      pressure: data['current']['pressure_in']!,
+                      uvIndex: data['current']['uv']!,
+                    ),
+                    today(
+                      windSpeed: data['current']['wind_kph']!,
+                      rainChance: data['forecast']['forecastday']['0']['day']['daily_chance_of_rain']!,
+                      pressure: data['current']['pressure_in']!,
+                      uvIndex: data['current']['uv']!,
+                    ),
                   ],
                 ),
               ),
