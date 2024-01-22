@@ -13,6 +13,10 @@ class Today extends StatefulWidget{
   //var for hourly forecast
   final List hourlyForecastList;
 
+  //sunrise and sunset
+  final String sunrise;
+  final String sunset;
+
   const Today({
     super.key,
     required this.windSpeed,
@@ -21,7 +25,12 @@ class Today extends StatefulWidget{
     required this.uvIndex,
 
     //for hourly forecast
-    required this.hourlyForecastList
+    required this.hourlyForecastList,
+
+    //sunrise and sunset
+    required this.sunrise,
+    required this.sunset,
+
   });
 
   @override
@@ -141,7 +150,7 @@ class _TodayState extends State<Today> {
                       borderRadius: BorderRadius.circular(20)
                   ),child: Image.asset("assets/images/nights_stay.png" ,height: 16, width: 16,),
                 ),
-                const Column(
+                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -150,7 +159,7 @@ class _TodayState extends State<Today> {
                         fontWeight: FontWeight.w500
                     )),
 
-                    Text("4:20 AM", style: TextStyle(
+                    Text(widget.sunrise, style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500
                     ))
@@ -195,7 +204,7 @@ class _TodayState extends State<Today> {
                         fontWeight: FontWeight.w500
                     )),
 
-                    Text("4:50 PM", style: TextStyle(
+                    Text(widget.sunset, style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500
                     ))
@@ -534,7 +543,7 @@ class _TodayState extends State<Today> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text('${index + 1}',
+                          Text(index < 12 ? "${index + 1} AM" : "${index + 1} PM",
                               style: TextStyle(
                                   fontSize: 13.16,
                                   fontWeight: FontWeight.w500

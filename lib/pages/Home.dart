@@ -128,11 +128,13 @@ class _HomeState extends State<Home> {
                 controller: myPageController,
                 children: [
                   Today(
-                    windSpeed: data['current']['wind_kph']!.toString(),
-                    rainChance: data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString(),
-                    pressure: data['current']['pressure_in']!.toString(),
-                    uvIndex: data['current']['uv']!.toString(),
+                    windSpeed: '${data['current']['wind_kph']!.toInt().toString()} km/h',
+                    rainChance: '${data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString()}%',
+                    pressure: '${data['current']['pressure_in']!.toInt().toString()} hpa',
+                    uvIndex: data['current']['uv']!.toInt().toString(),
                     hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
+                    sunrise: data['forecast']['forecastday'][0]['astro']['sunrise'],
+                    sunset: data['forecast']['forecastday'][0]['astro']['sunset'],
                   ),
                   Today(
                     windSpeed: data['current']['wind_kph']!.toString(),
@@ -140,6 +142,8 @@ class _HomeState extends State<Home> {
                     pressure: data['current']['pressure_in']!.toString(),
                     uvIndex: data['current']['uv']!.toString(),
                     hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
+                    sunrise: data['forecast']['forecastday'][0]['astro']['sunrise'],
+                    sunset: data['forecast']['forecastday'][0]['astro']['sunset'],
                   ),
                   Today(
                     windSpeed: data['current']['wind_kph']!.toString(),
@@ -147,6 +151,8 @@ class _HomeState extends State<Home> {
                     pressure: data['current']['pressure_in']!.toString(),
                     uvIndex: data['current']['uv']!.toString(),
                     hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
+                    sunrise: data['forecast']['forecastday'][0]['astro']['sunrise'],
+                    sunset: data['forecast']['forecastday'][0]['astro']['sunset'],
                   ),
                 ],
               ),
