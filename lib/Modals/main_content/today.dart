@@ -4,10 +4,14 @@ import '../Colors.dart';
 
 class Today extends StatefulWidget{
 
+  //var for window
   final String windSpeed;
   final String rainChance;
   final String pressure;
   final String uvIndex;
+
+  //var for hourly forecast
+  final List hourlyForecastList;
 
   const Today({
     super.key,
@@ -15,6 +19,9 @@ class Today extends StatefulWidget{
     required this.rainChance,
     required this.pressure,
     required this.uvIndex,
+
+    //for hourly forecast
+    required this.hourlyForecastList
   });
 
   @override
@@ -27,16 +34,6 @@ class _TodayState extends State<Today> {
     const Color(0xFF2B00A5).withOpacity(0.5),
     windows,
     my_white
-  ];
-
-
-  List hourlyForecastList = [
-    {"time": "Now", "image": "assets/images/Group1.png", "degree": "10°"},
-    {"time": "10AM", "image": "assets/images/Group2.png", "degree": "8°"},
-    {"time": "11AM", "image": "assets/images/Group2.png", "degree": "5°"},
-    {"time": "12PM", "image": "assets/images/Group1.png", "degree": "12°"},
-    {"time": "1PM", "image": "assets/images/Group1.png", "degree": "9°"},
-    {"time": "2PM", "image": "assets/images/Group2.png", "degree": "12°"},
   ];
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
@@ -527,23 +524,23 @@ class _TodayState extends State<Today> {
             ),
             Container(
               width: 350,
-              height: 90,
+              height: 100,
               child: ListView.builder(
-                  itemCount: hourlyForecastList.length,
+                  itemCount: widget.hourlyForecastList.length,
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index){
+                  itemBuilder: (context, int index){
                     return Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(hourlyForecastList[index]["time"],
+                          Text('${index + 1}',
                               style: TextStyle(
                                   fontSize: 13.16,
                                   fontWeight: FontWeight.w500
                               )),
-                          Image.asset(hourlyForecastList[index]["image"], height: 32, width: 24,),
-                          Text(hourlyForecastList[index]["degree"], style: TextStyle(
+                          Image.network('https:${widget.hourlyForecastList[index]["condition"]['icon']}', height: 55, width: 55,),
+                          Text('${widget.hourlyForecastList[index]["temp_c"].toString()}°', style: TextStyle(
                               fontSize: 18.18,
                               fontWeight: FontWeight.w500
 

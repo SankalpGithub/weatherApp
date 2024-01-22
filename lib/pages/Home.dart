@@ -89,6 +89,7 @@ class _HomeState extends State<Home> {
       ): CustomScrollView(
         controller: scrollController,
         slivers: [
+
           //Main App Bar
           MyAppBar(
               address: data['location']['name'] + "," + data['location']['country'],
@@ -131,18 +132,21 @@ class _HomeState extends State<Home> {
                     rainChance: data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString(),
                     pressure: data['current']['pressure_in']!.toString(),
                     uvIndex: data['current']['uv']!.toString(),
+                    hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
                   ),
                   Today(
                     windSpeed: data['current']['wind_kph']!.toString(),
                     rainChance: data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString(),
                     pressure: data['current']['pressure_in']!.toString(),
                     uvIndex: data['current']['uv']!.toString(),
+                    hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
                   ),
                   Today(
                     windSpeed: data['current']['wind_kph']!.toString(),
                     rainChance: data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString(),
                     pressure: data['current']['pressure_in']!.toString(),
                     uvIndex: data['current']['uv']!.toString(),
+                    hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
                   ),
                 ],
               ),
