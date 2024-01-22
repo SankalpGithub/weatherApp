@@ -2,14 +2,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../Colors.dart';
 
-class today extends StatefulWidget{
+class Today extends StatefulWidget{
 
   final String windSpeed;
   final String rainChance;
   final String pressure;
   final String uvIndex;
 
-  const today({
+  const Today({
     super.key,
     required this.windSpeed,
     required this.rainChance,
@@ -18,19 +18,19 @@ class today extends StatefulWidget{
   });
 
   @override
-  State<today> createState() => _todayState();
+  State<Today> createState() => _TodayState();
 }
 
-class _todayState extends State<today> {
+class _TodayState extends State<Today> {
 
   List<Color> gradientColors = [
-    Color(0xFF2B00A5).withOpacity(0.5),
+    const Color(0xFF2B00A5).withOpacity(0.5),
     windows,
     my_white
   ];
 
 
-  List hourly_forecast_list = [
+  List hourlyForecastList = [
     {"time": "Now", "image": "assets/images/Group1.png", "degree": "10°"},
     {"time": "10AM", "image": "assets/images/Group2.png", "degree": "8°"},
     {"time": "11AM", "image": "assets/images/Group2.png", "degree": "5°"},
@@ -111,7 +111,7 @@ class _todayState extends State<today> {
 
         day_forecast(),
 
-        chance_of_rain(),
+        chanceOfRain(),
 
         sunriseAndSet(),
 
@@ -220,9 +220,9 @@ class _todayState extends State<today> {
     );
   }
 
-  Container chance_of_rain() {
+  Container chanceOfRain() {
     return Container(
-        margin: EdgeInsets.only(top: 16, left: 10, right: 10),
+        margin:const EdgeInsets.only(top: 16,),
         width: 380,
         height: 213,
         decoration: BoxDecoration(
@@ -529,7 +529,7 @@ class _todayState extends State<today> {
               width: 350,
               height: 90,
               child: ListView.builder(
-                  itemCount: hourly_forecast_list.length,
+                  itemCount: hourlyForecastList.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index){
                     return Container(
@@ -537,13 +537,13 @@ class _todayState extends State<today> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(hourly_forecast_list[index]["time"],
+                          Text(hourlyForecastList[index]["time"],
                               style: TextStyle(
                                   fontSize: 13.16,
                                   fontWeight: FontWeight.w500
                               )),
-                          Image.asset(hourly_forecast_list[index]["image"], height: 32, width: 24,),
-                          Text(hourly_forecast_list[index]["degree"], style: TextStyle(
+                          Image.asset(hourlyForecastList[index]["image"], height: 32, width: 24,),
+                          Text(hourlyForecastList[index]["degree"], style: TextStyle(
                               fontSize: 18.18,
                               fontWeight: FontWeight.w500
 

@@ -214,9 +214,8 @@ class MyAppBarState extends State<MyAppBar> {
                       ),
 
                       //feelsLike
-                      Container(
-                          child: Text(widget.feelsLike,
-                            style: const TextStyle(fontSize: 16, color: my_black),))
+                      Text(widget.feelsLike,
+                        style: const TextStyle(fontSize: 16, color: my_black),)
                     ]
                 ),
 

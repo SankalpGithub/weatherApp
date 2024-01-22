@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather/Modals/main_content/today.dart';
+import 'package:weather/Modals/main_content/Today.dart';
 import 'package:weather/Modals/request.dart';
 import 'package:weather/Modals/my_app_bar.dart';
 import '../Modals/Colors.dart';
@@ -16,7 +16,7 @@ class _HomeState extends State<Home> {
   final ScrollController scrollController = ScrollController();
   bool isScrolled = false;
   bool isContent = false;
-  Map<String, dynamic> data = {};
+  var data = null;
   final  myPageController = PageController();
   int isTapText =  0;
   String time = "";
@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
   void isTap(int page){
     setState(() {
      isTapText = page;
-     myPageController.animateToPage(isTapText, duration: Duration(milliseconds: 300),curve: Curves.linear);
+     myPageController.animateToPage(isTapText, duration: const Duration(milliseconds: 300),curve: Curves.linear);
     });
   }
 
@@ -42,10 +42,12 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void getData() async{
+  getData() async{
     Request re = Request();
     data = await re.fetchData();
-    dateTime(data['location']['localtime']!);
+    dateTime( await data['location']['localtime']!);
+    setState(() {
+    });
   }
   
   void dateTime(String dateTime){
@@ -80,75 +82,76 @@ class _HomeState extends State<Home> {
 //TODO: BUILD METHOD
   @override
   Widget build(BuildContext context) {
+     return Scaffold(
+       backgroundColor: my_bg,
+      body: data == null ? const Center(
+        child: CircularProgressIndicator(),
+      ): CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          //Main App Bar
+          MyAppBar(
+              address: data['location']['name'] + "," + data['location']['country'],
+              tempInDegree: "${data['current']['temp_c']!.toInt().toString()}°",
+              feelsLike: "feelsLike ${data['current']['feelslike_c']!.toString()}°",
+              weatherDis: data['current']['condition']['text']!,
+              weatherImgPath: data['current']['condition']['icon']!,
+              date: date,
+              time: time,
+              dayDegree: "Day 3°",
+              nightDegree: "Night -1°",
+              isContent: isContent,
+              isScrolled: isScrolled
+          ),
 
-    return Scaffold(
-        backgroundColor: my_bg,
-        body: CustomScrollView(
-          controller: scrollController,
-          slivers: [
-
-            //Main App Bar
-            MyAppBar(
-                address: data['location']['name']! + "," + data['location']['country']!,
-                tempInDegree: "${data['current']['temp_c']!.toInt().toString()}°",
-                feelsLike: "feelsLike ${data['current']['feelslike_c']!.toString()}°",
-                weatherDis: data['current']['condition']['text']!,
-                weatherImgPath: data['current']['condition']['icon']!,
-                date: date,
-                time: time,
-                dayDegree: "Day 3°",
-                nightDegree: "Night -1°",
-                isContent: isContent,
-                isScrolled: isScrolled
+          //options
+          SliverAppBar(
+            toolbarHeight: 30,
+            snap: false,
+            backgroundColor: isContent?sticknav: my_bg,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: option(),
+              collapseMode: CollapseMode.parallax,
             ),
+          ),
 
-            //options
-            SliverAppBar(
-              toolbarHeight: 30,
-              snap: false,
-              backgroundColor: isContent?sticknav: my_bg,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                background: option(),
-                collapseMode: CollapseMode.parallax,
+          //BODY
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 893,
+              child: PageView(
+                onPageChanged: (int index){
+                  isTap(index);
+                },
+                controller: myPageController,
+                children: [
+                  Today(
+                    windSpeed: data['current']['wind_kph']!.toString(),
+                    rainChance: data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString(),
+                    pressure: data['current']['pressure_in']!.toString(),
+                    uvIndex: data['current']['uv']!.toString(),
+                  ),
+                  Today(
+                    windSpeed: data['current']['wind_kph']!.toString(),
+                    rainChance: data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString(),
+                    pressure: data['current']['pressure_in']!.toString(),
+                    uvIndex: data['current']['uv']!.toString(),
+                  ),
+                  Today(
+                    windSpeed: data['current']['wind_kph']!.toString(),
+                    rainChance: data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString(),
+                    pressure: data['current']['pressure_in']!.toString(),
+                    uvIndex: data['current']['uv']!.toString(),
+                  ),
+                ],
               ),
             ),
-            
-            //BODY
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 893,
-                child: PageView(
-                  onPageChanged: (int index){
-                    isTap(index);
-                  },
-                  controller: myPageController,
-                  children: [
-                    today(
-                      windSpeed: data['current']['wind_kph']!,
-                      rainChance: data['forecast']['forecastday']['0']['day']['daily_chance_of_rain']!,
-                      pressure: data['current']['pressure_in']!,
-                      uvIndex: data['current']['uv']!,
-                    ),
-                    today(
-                      windSpeed: data['current']['wind_kph']!,
-                      rainChance: data['forecast']['forecastday']['0']['day']['daily_chance_of_rain']!,
-                      pressure: data['current']['pressure_in']!,
-                      uvIndex: data['current']['uv']!,
-                    ),
-                    today(
-                      windSpeed: data['current']['wind_kph']!,
-                      rainChance: data['forecast']['forecastday']['0']['day']['daily_chance_of_rain']!,
-                      pressure: data['current']['pressure_in']!,
-                      uvIndex: data['current']['uv']!,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        )
-      );
+          )
+        ],
+      )
+    );
+
   }
 
   //TODO: MY WIDGETS
@@ -157,7 +160,7 @@ class _HomeState extends State<Home> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
 
-        //today option
+        //Today option
         GestureDetector(
           onTap: (){
             isTap(0);
