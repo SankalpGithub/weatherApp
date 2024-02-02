@@ -177,7 +177,7 @@ class _TodayState extends State<Today> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 6),
+            margin: const EdgeInsets.only(top: 6),
             height: 65,
             width: 182,
             decoration: BoxDecoration(
