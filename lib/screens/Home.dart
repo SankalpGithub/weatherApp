@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:weather/Modals/main_content/Today.dart';
+import 'package:weather/pages/Today.dart';
 import 'package:weather/Modals/request.dart';
 import 'package:weather/Modals/my_app_bar.dart';
 import '../Modals/Colors.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 class Home extends StatefulWidget{
-  final String lat;
-  final String long;
-
-  const Home({
-    super.key,
-    required this.lat,
-    required this.long
-  });
-
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -23,6 +16,8 @@ class Home extends StatefulWidget{
 class _HomeState extends State<Home> {
 
   //TODO: VAR DECLARATION
+  String lat = '0.0';
+   String long = '0.0';
   final ScrollController scrollController = ScrollController();
   bool isScrolled = false;
   bool isContent = false;
@@ -33,17 +28,15 @@ class _HomeState extends State<Home> {
   String date = "";
 
   //TODO: METHODS
-  void isTap(int page){
-    setState(() {
-     isTapText = page;
-     myPageController.animateToPage(isTapText, duration: const Duration(milliseconds: 300),curve: Curves.linear);
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    getData();
+
+    //check location permission and get location info
+    checkPermission();
+
+
     scrollController.addListener(() {
       setState(() {
         isScrolled = scrollController.offset > 10? true: false;
@@ -52,8 +45,34 @@ class _HomeState extends State<Home> {
     });
   }
 
-  getData() async{
-    Request re = Request(lat: widget.lat, long: widget.long);
+  void checkPermission() async{
+    LocationPermission permission = await Geolocator.checkPermission();
+    if(permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      LocationPermission ask = await Geolocator.requestPermission();
+      if(ask == LocationPermission.whileInUse || ask == LocationPermission.always){
+        locationInfo();
+      }
+    }else{
+      locationInfo();
+    }
+  }
+
+  void locationInfo() async{
+    Position currentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    lat = currentPosition.latitude.toString();
+    long = currentPosition.longitude.toString();
+    await getData(lat:lat, long:long);
+  }
+
+  void isTap(int page){
+    setState(() {
+     isTapText = page;
+     myPageController.animateToPage(isTapText, duration: const Duration(milliseconds: 300),curve: Curves.linear);
+    });
+  }
+
+  getData({String lat = "0.0", String long = "0.0"}) async{
+    Request re = Request(lat: lat, long: long);
     data = await re.fetchData();
     dateTime( await data['location']['localtime']!);
     setState(() {

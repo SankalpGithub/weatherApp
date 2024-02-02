@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../Colors.dart';
+import '../Modals/Colors.dart';
 
 class Today extends StatefulWidget{
 

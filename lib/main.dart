@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather/Modals/Colors.dart';
-import 'package:weather/pages/Home.dart';
 import 'package:flutter/services.dart';
+import 'package:weather/screens/Home.dart';
 
-import 'Modals/currentLocation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,9 +17,9 @@ class MyApp extends StatelessWidget {
        systemNavigationBarColor: my_bg
     ));
     return const MaterialApp(
-      title: 'Flutter Demo',
+      title: 'WeatherApp',
       debugShowCheckedModeBanner: false,
-      home: GetCurrentLocation(),
+      home: Home(),
     );
   }
 }
