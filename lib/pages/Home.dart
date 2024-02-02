@@ -4,8 +4,18 @@ import 'package:weather/Modals/request.dart';
 import 'package:weather/Modals/my_app_bar.dart';
 import '../Modals/Colors.dart';
 
+
 class Home extends StatefulWidget{
-  const Home({super.key});
+  final String lat;
+  final String long;
+
+  const Home({
+    super.key,
+    required this.lat,
+    required this.long
+  });
+
+
   @override
   State<Home> createState() => _HomeState();
 }
@@ -43,7 +53,7 @@ class _HomeState extends State<Home> {
   }
 
   getData() async{
-    Request re = Request();
+    Request re = Request(lat: widget.lat, long: widget.long);
     data = await re.fetchData();
     dateTime( await data['location']['localtime']!);
     setState(() {
