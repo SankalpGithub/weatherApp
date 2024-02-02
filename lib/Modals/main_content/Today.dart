@@ -128,9 +128,13 @@ class _TodayState extends State<Today> {
   Container sunriseAndSet() {
     return Container(
       margin: const EdgeInsets.only(top: 24, bottom: 10),
+
+      //row for sunrise and sunset
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+
+          //sunrise
           Container(
             margin: const EdgeInsets.only(top: 6),
             height: 65,
@@ -142,6 +146,8 @@ class _TodayState extends State<Today> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+
+                //image
                 Container(
                   height: 28,
                   width: 28,
@@ -154,12 +160,14 @@ class _TodayState extends State<Today> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Sunrise", style: TextStyle(
+                    const Text("Sunrise",
+                        style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500
                     )),
 
-                    Text(widget.sunrise, style: TextStyle(
+                    Text(widget.sunrise,
+                        style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500
                     ))
@@ -167,7 +175,8 @@ class _TodayState extends State<Today> {
                 ),
                 Container(
                     margin: const EdgeInsets.only(top: 40),
-                    child: const Text("4h ago", style: TextStyle(
+                    child: const Text("4h ago",
+                        style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w500
                     )
@@ -176,6 +185,8 @@ class _TodayState extends State<Today> {
               ],
             ),
           ),
+
+          //sunset
           Container(
             margin: const EdgeInsets.only(top: 6),
             height: 65,
@@ -187,6 +198,8 @@ class _TodayState extends State<Today> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+
+                //image
                 Container(
                   height: 28,
                   width: 28,
@@ -195,24 +208,28 @@ class _TodayState extends State<Today> {
                       borderRadius: BorderRadius.circular(20)
                   ),child: Image.asset("assets/images/routine.png" ,height: 16, width: 16,),
                 ),
+
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Sunset", style: TextStyle(
+                    const Text("Sunset", style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500
                     )),
 
-                    Text(widget.sunset, style: TextStyle(
+                    Text(widget.sunset,
+                        style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500
                     ))
                   ],
                 ),
+
                 Container(
-                    margin: EdgeInsets.only(top: 40),
-                    child: Text("in 9h", style: TextStyle(
+                    margin: const EdgeInsets.only(top: 40),
+                    child: const Text("in 9h",
+                        style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w500
                     )
@@ -240,8 +257,10 @@ class _TodayState extends State<Today> {
           children: [
             Row(
               children: [
+
+                // image
                 Container(
-                  margin: EdgeInsets.all(11),
+                  margin: const EdgeInsets.all(11),
                   height: 28,
                   width: 28,
                   decoration: BoxDecoration(
@@ -250,41 +269,43 @@ class _TodayState extends State<Today> {
                   ),
                   child: Image.asset("assets/images/rainy.png"),
                 ),
-                Text("Chance of rain", style: TextStyle(
+
+                const Text("Chance of rain",
+                    style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500
                 ))
               ],
             ),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text("7 PM", style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500
-                  )),
 
-                  Container(
-                    height: 24,
-                    width: 229,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100)
-                    ),
-                    child: LinearProgressIndicator(
-                      borderRadius: BorderRadius.circular(100),
-                      backgroundColor: my_white,
-                      valueColor: new AlwaysStoppedAnimation<Color>(lines),
-                      value: 0.27,
-                    ),
+            //progress bars
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("7 PM", style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500
+                )),
+
+                Container(
+                  height: 24,
+                  width: 229,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100)
                   ),
-                  Text("27%", style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500
-                  )
-                    ,)
-                ],
-              ),
+                  child: LinearProgressIndicator(
+                    borderRadius: BorderRadius.circular(100),
+                    backgroundColor: my_white,
+                    valueColor: new AlwaysStoppedAnimation<Color>(lines),
+                    value: 0.27,
+                  ),
+                ),
+                Text("27%", style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500
+                )
+                  ,)
+              ],
             ),
 
             Container(
