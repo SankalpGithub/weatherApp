@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:weather/pages/Today.dart';
 import 'package:weather/Modals/request.dart';
@@ -32,17 +34,33 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-
     //check location permission and get location info
     checkPermission();
-
-
     scrollController.addListener(() {
       setState(() {
         isScrolled = scrollController.offset > 10? true: false;
         isContent = scrollController.offset > 220? true: false;
       });
     });
+  }
+
+  List<double> checkMinMaxTemp(List<List<double>> items) {
+    double min = items[0][0];
+    double max = items[0][1];
+
+    // Iterate through the remaining sub-lists
+    for (List<double> range in items) {
+      // Compare and update min value
+      if (range[0] < min) {
+        min = range[0];
+      }
+
+      // Compare and update max value
+      if (range[1] > max) {
+        max = range[1];
+      }
+    }
+      return [min, max];
   }
 
   void checkPermission() async{
@@ -101,6 +119,10 @@ class _HomeState extends State<Home> {
      date = '$month ${dateList[2]}';
   }
 
+  String hour(String time){
+    List<String> hours = time.split(":");
+    return hours[0];
+  }
 
   @override
   void dispose() {
@@ -128,10 +150,9 @@ class _HomeState extends State<Home> {
               weatherImgPath: data['current']['condition']['icon']!,
               date: date,
               time: time,
-              dayDegree: "Day 3°",
-              nightDegree: "Night -1°",
+              isDay: data['current']['is_day'],
               isContent: isContent,
-              isScrolled: isScrolled
+              isScrolled: isScrolled,
           ),
 
           //options
@@ -157,13 +178,41 @@ class _HomeState extends State<Home> {
                 controller: myPageController,
                 children: [
                   Today(
+
+                    //windows
                     windSpeed: '${data['current']['wind_kph']!.toInt().toString()} km/h',
                     rainChance: '${data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString()}%',
                     pressure: '${data['current']['pressure_in']!.toInt().toString()} hpa',
                     uvIndex: data['current']['uv']!.toInt().toString(),
+
+                    //hourly forecast
                     hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
+
+                    //sun raise and sun set
                     sunrise: data['forecast']['forecastday'][0]['astro']['sunrise'],
                     sunset: data['forecast']['forecastday'][0]['astro']['sunset'],
+
+                    //chance of rain
+                    chanceOfRain: [
+                      {"time": int.parse(hour(time)), 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))]['chance_of_rain']},
+                      {"time": int.parse(hour(time))+1, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+1]['chance_of_rain']},
+                      {"time":int.parse(hour(time))+2, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+2]['chance_of_rain']},
+                      {"time": int.parse(hour(time))+3, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+3]['chance_of_rain']},
+                    ],
+
+                    //day forecast
+                    min: checkMinMaxTemp([
+                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
+                    [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
+                    [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
+                    ])[0],
+
+                    max: checkMinMaxTemp([
+                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
+                    ])[1],
+
                   ),
                   Today(
                     windSpeed: data['current']['wind_kph']!.toString(),
@@ -173,6 +222,26 @@ class _HomeState extends State<Home> {
                     hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
                     sunrise: data['forecast']['forecastday'][0]['astro']['sunrise'],
                     sunset: data['forecast']['forecastday'][0]['astro']['sunset'],
+                    chanceOfRain: [
+                      {"time": int.parse(hour(time)), 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))]['chance_of_rain']},
+                      {"time": int.parse(hour(time))+1, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+1]['chance_of_rain']},
+                      {"time":int.parse(hour(time))+2, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+2]['chance_of_rain']},
+                      {"time": int.parse(hour(time))+3, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+3]['chance_of_rain']},
+                    ],
+
+                    min: checkMinMaxTemp([
+                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
+                    ])[0],
+
+                    max: checkMinMaxTemp([
+                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
+                    ])[1],
+
+
                   ),
                   Today(
                     windSpeed: data['current']['wind_kph']!.toString(),
@@ -182,6 +251,25 @@ class _HomeState extends State<Home> {
                     hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
                     sunrise: data['forecast']['forecastday'][0]['astro']['sunrise'],
                     sunset: data['forecast']['forecastday'][0]['astro']['sunset'],
+                    chanceOfRain: [
+                      {"time": int.parse(hour(time)), 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))]['chance_of_rain']},
+                      {"time": int.parse(hour(time))+1, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+1]['chance_of_rain']},
+                      {"time":int.parse(hour(time))+2, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+2]['chance_of_rain']},
+                      {"time": int.parse(hour(time))+3, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+3]['chance_of_rain']},
+                    ],
+
+                    min: checkMinMaxTemp([
+                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
+                    ])[0],
+
+                    max: checkMinMaxTemp([
+                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
+                    ])[1],
+
                   ),
                 ],
               ),
@@ -190,7 +278,6 @@ class _HomeState extends State<Home> {
         ],
       )
     );
-
   }
 
   //TODO: MY WIDGETS

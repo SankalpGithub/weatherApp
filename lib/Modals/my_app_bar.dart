@@ -9,8 +9,7 @@ class MyAppBar extends StatefulWidget{
   final String weatherImgPath;
   final String date;
   final String time;
-  final String dayDegree;
-  final String nightDegree;
+  final int isDay;
   final bool isContent;
   final bool isScrolled;
 
@@ -25,8 +24,7 @@ class MyAppBar extends StatefulWidget{
     required this.weatherImgPath,
     required this.date,
     required this.time,
-    required this.dayDegree,
-    required this.nightDegree,
+    required this.isDay,
         required this.isContent,
         required this.isScrolled
   });
@@ -149,17 +147,11 @@ class MyAppBarState extends State<MyAppBar> {
                   children: [
 
                     //dayDegree
-                    Text(widget.dayDegree,
+                    Text(widget.isDay == 0 ? "Night" : "Day",
                       style: const TextStyle(
                         color: my_white, fontSize: 18
                     ),
                     ),
-
-                    //nightDegree
-                    Text(widget.nightDegree,
-                      style: const TextStyle(
-                        color: my_white, fontSize: 18
-                    ),)
                   ],
                 )
               ],
