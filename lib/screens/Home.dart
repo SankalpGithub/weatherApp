@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:weather/pages/Today.dart';
 import 'package:weather/Modals/request.dart';
@@ -42,6 +43,18 @@ class _HomeState extends State<Home> {
         isContent = scrollController.offset > 220? true: false;
       });
     });
+  }
+
+  List<FlSpot> spots(){
+    List<FlSpot> spotList = [];
+    double count = 1;
+    for(int i=0; i<3; i++){
+      for(int j=0; j<24; j++){
+        spotList.add(FlSpot(count, data['forecast']['forecastday'][i]['hour'][j]['temp_c']));
+        count++;
+      }
+    }
+    return spotList;
   }
 
   List<double> checkMinMaxTemp(List<List<double>> items) {
@@ -213,34 +226,9 @@ class _HomeState extends State<Home> {
                       [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
                     ])[1],
 
-                  ),
-                  Today(
-                    windSpeed: data['current']['wind_kph']!.toString(),
-                    rainChance: data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString(),
-                    pressure: data['current']['pressure_in']!.toString(),
-                    uvIndex: data['current']['uv']!.toString(),
-                    hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
-                    sunrise: data['forecast']['forecastday'][0]['astro']['sunrise'],
-                    sunset: data['forecast']['forecastday'][0]['astro']['sunset'],
-                    chanceOfRain: [
-                      {"time": int.parse(hour(time)), 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))]['chance_of_rain']},
-                      {"time": int.parse(hour(time))+1, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+1]['chance_of_rain']},
-                      {"time":int.parse(hour(time))+2, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+2]['chance_of_rain']},
-                      {"time": int.parse(hour(time))+3, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+3]['chance_of_rain']},
-                    ],
-
-                    min: checkMinMaxTemp([
-                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
-                      [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
-                      [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
-                    ])[0],
-
-                    max: checkMinMaxTemp([
-                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
-                      [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
-                      [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
-                    ])[1],
-
+                    spotList: spots(),
+                    date: data['current']['last_updated'],
+                    currentTime: time,
 
                   ),
                   Today(
@@ -269,6 +257,42 @@ class _HomeState extends State<Home> {
                       [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
                       [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
                     ])[1],
+
+                    spotList: spots(),
+                    date: data['current']['last_updated'],
+                    currentTime: time,
+
+                  ),
+                  Today(
+                    windSpeed: data['current']['wind_kph']!.toString(),
+                    rainChance: data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']!.toString(),
+                    pressure: data['current']['pressure_in']!.toString(),
+                    uvIndex: data['current']['uv']!.toString(),
+                    hourlyForecastList: data['forecast']['forecastday'][0]['hour'],
+                    sunrise: data['forecast']['forecastday'][0]['astro']['sunrise'],
+                    sunset: data['forecast']['forecastday'][0]['astro']['sunset'],
+                    chanceOfRain: [
+                      {"time": int.parse(hour(time)), 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))]['chance_of_rain']},
+                      {"time": int.parse(hour(time))+1, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+1]['chance_of_rain']},
+                      {"time":int.parse(hour(time))+2, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+2]['chance_of_rain']},
+                      {"time": int.parse(hour(time))+3, 'percent': data['forecast']['forecastday'][0]['hour'][int.parse(hour(time))+3]['chance_of_rain']},
+                    ],
+
+                    min: checkMinMaxTemp([
+                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
+                    ])[0],
+
+                    max: checkMinMaxTemp([
+                      [data['forecast']['forecastday'][0]['day']['mintemp_c'], data['forecast']['forecastday'][0]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][1]['day']['mintemp_c'], data['forecast']['forecastday'][1]['day']['maxtemp_c']],
+                      [data['forecast']['forecastday'][2]['day']['mintemp_c'], data['forecast']['forecastday'][2]['day']['maxtemp_c']]
+                    ])[1],
+                    spotList: spots(),
+                    date: data['current']['last_updated'],
+                    currentTime: time
+
 
                   ),
                 ],

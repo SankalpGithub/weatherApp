@@ -15,6 +15,7 @@ class Today extends StatefulWidget {
   //sunrise and sunset
   final String sunrise;
   final String sunset;
+  final String currentTime;
 
   //rain chance
   final List chanceOfRain;
@@ -22,6 +23,8 @@ class Today extends StatefulWidget {
   //day forecast
   final double min;
   final double max;
+  final List<FlSpot> spotList;
+  final String date;
 
   const Today(
       {super.key,
@@ -36,25 +39,35 @@ class Today extends StatefulWidget {
       //sunrise and sunset
       required this.sunrise,
       required this.sunset,
+      required this.currentTime,
 
       //chance of rain
       required this.chanceOfRain,
 
       //day forecast
       required this.min,
-      required this.max});
+      required this.max,
+      required this.spotList,
+      required this.date
+
+      });
 
   @override
   State<Today> createState() => _TodayState();
 }
 
+//TODO: Methods
+
 class _TodayState extends State<Today> {
+  
+  //fl graph color gradiant
   List<Color> gradientColors = [
     const Color(0xFF2B00A5).withOpacity(0.5),
     windows,
     my_white
   ];
-
+  
+  //fl graph bottom tile
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.w500,
@@ -63,26 +76,17 @@ class _TodayState extends State<Today> {
     Widget text;
     switch (value.toInt()) {
       case 1:
-        text = const Text('Mon', style: style);
+        text =  Text(dayString(widget.date)[0], style: style);
         break;
       case 24:
-        text = const Text('Tue', style: style);
+        text = Text(dayString(widget.date)[1], style: style);
         break;
       case 48:
-        text = const Text('Wed', style: style);
+        text = Text(dayString(widget.date)[2], style: style);
         break;
-      // case 4:
-      //   text = const Text('Thu', style: style);
-      //   break;
-      // case 5:
-      //   text = const Text('Fri', style: style);
-      //   break;
-      // case 6:
-      //   text = const Text('Sat', style: style);
-      //   break;
-      // case 7:
-      //   text = const Text('Sun', style: style);
-      //   break;
+      case 72:
+        text = Text(dayString(widget.date)[3], style: style);
+        break;
       default:
         text = const Text('', style: style);
         break;
@@ -93,32 +97,13 @@ class _TodayState extends State<Today> {
       child: text,
     );
   }
-
+  
+  //fl graph left tile
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontSize: 15,
     );
     String text = '';
-    // switch (value.toInt()) {
-    //   case 10:
-    //     text = ' 10° ';
-    //     break;
-    //   case 0:
-    //     text = ' 0° ';
-    //     break;
-    //   case -10:
-    //     text = '-10° ';
-    //     break;
-    //   default:
-    //     return Container();
-    // }
-
-    // if(value == widget.min){
-    //   text == '${widget.min}°';
-    // }
-    // if(value == widget.max){
-    //   text = "${widget.max}°";
-    // }
     double avg = (widget.max + 3 + widget.min)/2;
     Map<dynamic, dynamic> actions = {
       widget.max.toInt() + 4: ' ${widget.max.toInt() + 4}° ',
@@ -132,14 +117,60 @@ class _TodayState extends State<Today> {
     } else {
       text = '';
     }
-
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
+  //List of days for left tile
+  List<String> dayString(String date){
+    
+    List<String> dateTimeList = date.split(" ");
+    List<int> dateParts = dateTimeList[0].split('-').map(int.parse).toList();
+    DateTime dateTime = DateTime(dateParts[0], dateParts[1], dateParts[2]);
+    int dayOfWeek = dateTime.weekday;
+
+    List<String> dayList = [];
+    for(int i=0;i<4;i++){
+      dayList.add(day(dayOfWeek + i));
+    }
+    return dayList;
+  }
+
+  //day for give index
+  String day(int currentDay){
+    switch (currentDay) {
+      case 1:
+        return "Mon";
+      case 2:
+        return "Tue";
+      case 3:
+        return "Wed";
+      case 4:
+        return "Thu";
+      case 5:
+        return "Fri";
+      case 6:
+        return "Sat";
+      case 7:
+        return "Sun";
+      default:
+        return "Invalid day";
+    }
+  }
+
+  //am or pm
   String dayStatus(int time) {
     String status = "";
     time < 12 && time == 24 ? status = "AM" : status = "PM";
     return status;
+  }
+
+  //hour of sunrise or sunset
+  int sunAstro(String time){
+    if(time.split(" ")[1] == "PM"){
+      return int.parse(time.split(":")[0]) + 12;
+    }else{
+      return int.parse(time.split(":")[0]);
+    }
   }
 
   @override
@@ -149,9 +180,9 @@ class _TodayState extends State<Today> {
 
         window(),
 
-        hourly_forecast(),
+        hourlyForecast(),
 
-        day_forecast(),
+        dayForecast(),
 
         chanceOfRain(),
 
@@ -205,8 +236,8 @@ class _TodayState extends State<Today> {
                 ),
                 Container(
                     margin: const EdgeInsets.only(top: 40),
-                    child: const Text("4h ago",
-                        style: TextStyle(
+                    child: Text("${int.parse(widget.currentTime.split(":")[0]) - sunAstro(widget.sunrise)}h ago",
+                        style: const TextStyle(
                             fontSize: 10, fontWeight: FontWeight.w500)))
               ],
             ),
@@ -251,8 +282,8 @@ class _TodayState extends State<Today> {
 
                 Container(
                     margin: const EdgeInsets.only(top: 40),
-                    child: const Text("in 9h",
-                        style: TextStyle(
+                    child: Text("in ${sunAstro(widget.sunset) - int.parse(widget.currentTime.split(":")[0])}h",
+                        style: const TextStyle(
                             fontSize: 10, fontWeight: FontWeight.w500)))
               ],
             ),
@@ -398,9 +429,9 @@ class _TodayState extends State<Today> {
         ));
   }
 
-  Container day_forecast() {
+  Container dayForecast() {
     return  Container(
-        margin: EdgeInsets.only(top: 16, left: 10, right: 10),
+        margin: const EdgeInsets.only(top: 16, left: 10, right: 10),
         width: 380,
         height: 219,
         decoration: BoxDecoration(
@@ -413,7 +444,7 @@ class _TodayState extends State<Today> {
             Row(
               children: [
                 Container(
-                  margin: EdgeInsets.all(11),
+                  margin: const EdgeInsets.all(11),
                   height: 28,
                   width: 28,
                   decoration: BoxDecoration(
@@ -422,21 +453,21 @@ class _TodayState extends State<Today> {
                   ),
                   child: Image.asset("assets/images/calendar_month.png"),
                 ),
-                Text("Day forecast", style: TextStyle(
+                const Text("Day forecast", style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500
                 ))
               ],
             ),
             Container(
-                margin: EdgeInsets.only(right: 20, left: 10),
+                margin: const EdgeInsets.only(right: 20, left: 10),
                 height: 120,
                 width: 370,
                 color: Colors.transparent,
                 child: LineChart(
                     LineChartData(
                         minX: 1,
-                        maxX: 48,
+                        maxX: 72,
                         minY: widget.min.toInt() -2,
                         maxY: widget.max.toInt() + 4,
                         borderData: FlBorderData(show: false),
@@ -479,88 +510,9 @@ class _TodayState extends State<Today> {
                         ),
                         lineBarsData: [
                           LineChartBarData(
-                            spots: [
-                              // //day 1
-                              //  FlSpot(1, 0),
-                              //  FlSpot(2, 12),
-                              //  FlSpot(3, 15),
-                              //  FlSpot(4, 36),
-                              //  FlSpot(5, 36),
-                              //  FlSpot(6, 36),
-                              //  FlSpot(7, 36),
-                              //  FlSpot(8, 36),
-                              //  FlSpot(9, 36),
-                              //  FlSpot(10, 36),
-                              //  FlSpot(11, 36),
-                              //  FlSpot(12, 36),
-                              //  FlSpot(13, 36),
-                              //  FlSpot(14, 36),
-                              //  FlSpot(15, 36),
-                              //  FlSpot(16, 36),
-                              //  FlSpot(17, 36),
-                              //  FlSpot(18, 36),
-                              //  FlSpot(19, 36),
-                              //  FlSpot(20, 36),
-                              //  FlSpot(21, 36),
-                              //  FlSpot(22, 36),
-                              //  FlSpot(23, 36),
-                              //  FlSpot(24, 36),
-                              //
-                              // //day 2
-                              // FlSpot(1, 35),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              //
-                              // //day 3
-                              // FlSpot(1, 35),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-                              // FlSpot(1.1, 36),
-
-                            ],
+                            spots: widget.spotList,
                             isCurved: true,
-                            dotData: FlDotData(show: false),
+                            dotData: const FlDotData(show: false),
                             color: my_black,
                             belowBarData: BarAreaData(
                               show: true,
@@ -582,9 +534,9 @@ class _TodayState extends State<Today> {
     );
   }
 
-  Container hourly_forecast() {
+  Container hourlyForecast() {
     return Container(
-        margin: EdgeInsets.only(top: 16, left: 10, right: 10),
+        margin: const EdgeInsets.only(top: 16, left: 10, right: 10),
         width: 380,
         height: 150,
         decoration: BoxDecoration(
@@ -595,18 +547,18 @@ class _TodayState extends State<Today> {
             Row(
               children: [
                 Container(
-                  margin: EdgeInsets.all(11),
+                  margin: const EdgeInsets.all(11),
                   height: 28,
                   width: 28,
                   decoration: BoxDecoration(
                       color: my_white, borderRadius: BorderRadius.circular(20)),
                   child: Image.asset("assets/images/history_toggle_off.png"),
                 ),
-                Text("Hourly forecast",
+               const Text("Hourly forecast",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))
               ],
             ),
-            Container(
+            SizedBox(
               width: 350,
               height: 100,
               child: ListView.builder(
@@ -614,7 +566,7 @@ class _TodayState extends State<Today> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, int index) {
                     return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -622,7 +574,7 @@ class _TodayState extends State<Today> {
                               index < 12
                                   ? "${index + 1} AM"
                                   : "${index + 1} PM",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 13.16,
                                   fontWeight: FontWeight.w500)),
                           Image.network(
@@ -632,7 +584,7 @@ class _TodayState extends State<Today> {
                           ),
                           Text(
                               '${widget.hourlyForecastList[index]["temp_c"].toString()}°',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18.18, fontWeight: FontWeight.w500))
                         ],
                       ),
@@ -645,14 +597,14 @@ class _TodayState extends State<Today> {
 
   Container window() {
     return Container(
-        margin: EdgeInsets.only(top: 16),
+        margin: const EdgeInsets.only(top: 16),
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  margin: EdgeInsets.only(bottom: 6),
+                  margin: const EdgeInsets.only(bottom: 6),
                   height: 65,
                   width: 182,
                   decoration: BoxDecoration(
@@ -677,11 +629,12 @@ class _TodayState extends State<Today> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Wind speed",
+                          const Text("Wind speed",
                               style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500)),
+                                  fontSize: 14, fontWeight: FontWeight.w500)
+                          ),
                           Text(widget.windSpeed,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w500))
                         ],
                       ),
@@ -689,7 +642,7 @@ class _TodayState extends State<Today> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(bottom: 6),
+                  margin: const EdgeInsets.only(bottom: 6),
                   height: 65,
                   width: 182,
                   decoration: BoxDecoration(
@@ -714,11 +667,12 @@ class _TodayState extends State<Today> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Rain chance",
+                          const Text("Rain chance",
                               style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500)),
+                                  fontSize: 14, fontWeight: FontWeight.w500)
+                          ),
                           Text(widget.rainChance,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w500))
                         ],
                       ),
@@ -731,7 +685,7 @@ class _TodayState extends State<Today> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 6),
+                  margin: const EdgeInsets.only(top: 6),
                   height: 65,
                   width: 182,
                   decoration: BoxDecoration(
@@ -756,11 +710,11 @@ class _TodayState extends State<Today> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Pressure",
+                         const Text("Pressure",
                               style: TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.w500)),
                           Text(widget.pressure,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w500))
                         ],
                       ),
@@ -768,7 +722,7 @@ class _TodayState extends State<Today> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 6),
+                  margin: const EdgeInsets.only(top: 6),
                   height: 65,
                   width: 182,
                   decoration: BoxDecoration(
@@ -793,11 +747,11 @@ class _TodayState extends State<Today> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("UV Index",
+                          const Text("UV Index",
                               style: TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.w500)),
                           Text(widget.uvIndex,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w500))
                         ],
                       ),
