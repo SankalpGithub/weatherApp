@@ -19,30 +19,73 @@ class HistoryState extends State<History> {
                 return
                     Container(
                       margin: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
-                      height: 84,
+                      height: 86,
                       width: 200,
                       decoration: BoxDecoration(
                         color: windows.withOpacity(0.3),
                         borderRadius: BorderRadius.all(Radius.circular(18))
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Column(
-                            children: [
-                              Text('date'),
-                              Text('condition')
-                            ],
+                          Container(
+                            margin: EdgeInsets.all(15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Saturday, Feb 10', style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500
+                                ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text('Couldy', style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300
+                                ),)
+                              ],
+                            ),
                           ),
-                          Column(
-                            children: [
-                              Text('temp_c'),
-                              Text('feelsLike')
-                            ],
-                          ),
-                          
-                          Image.asset("assets/images/Group1.png")
+                          Container(
+                            height: 80,
+                            width: 150,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(top: 15),
+                                    child: Column(
+                                      children: [
+                                        Text('30°', style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500
+                                        ),),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text('29°', style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500
+                                        ),)
+                                      ],
+                                    ),
+                                  ),
+
+                                  Container(
+                                    width: 2,
+                                    height: 50,
+                                    color: my_black.withOpacity(0.5),
+                                  ),
+
+                                  Image.asset("assets/images/Group1.png")
+                                ],
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     );

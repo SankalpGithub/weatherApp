@@ -130,7 +130,7 @@ class _TodayState extends State<Today> {
 
     List<String> dayList = [];
     for(int i=0;i<4;i++){
-      dayList.add(day(dayOfWeek + i));
+      dayList.add(day((dayOfWeek + i)%7));
     }
     return dayList;
   }
@@ -150,7 +150,7 @@ class _TodayState extends State<Today> {
         return "Fri";
       case 6:
         return "Sat";
-      case 7:
+      case 0:
         return "Sun";
       default:
         return "Invalid day";
